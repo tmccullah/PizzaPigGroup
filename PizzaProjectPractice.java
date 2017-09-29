@@ -1,9 +1,15 @@
+package PizzaPOS;
+
+import PizzaPOS.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -25,18 +31,22 @@ public class PizzaProjectPractice extends Application {
    StackPane stackPane = new StackPane();
    VBox vBox = new VBox();
    BorderPane borderPane = new BorderPane();
-   
+   Stage stage;
+
+
+
 // initialize panes
    MainPanePractice mainPane = new MainPanePractice();
    ToppingsPanePractice toppingsPane = new ToppingsPanePractice();
    CrustPanePractice crustPane = new CrustPanePractice();
    DrinksPanePractice drinkPane = new DrinksPanePractice();
    SizePanePractice sizePane = new SizePanePractice();
+   MakeAPayment makePayment = new MakeAPayment();
+
 
 
    @Override
    public void start(Stage stage) {
-
    // create new receipt text field that will not be editable
       TextArea receipt = new TextArea("");
       receipt.setFont(Font.font("Lucida Grande", 12));
@@ -119,7 +129,11 @@ public class PizzaProjectPractice extends Application {
          sizePane.activateButtons();
          toppingsPane.done.setDisable(false);
       });
-      
+
+
+      mainPane.pay.setOnAction(e-> {
+         makePayment.Start(stage);
+      });
       
    // create a label with text that is white, size 12, font is Lucida Grande
       Label receiptLbl = new Label("Items: \n\n\n");
@@ -137,12 +151,13 @@ public class PizzaProjectPractice extends Application {
       borderPane.setAlignment(mainPane, Pos.CENTER);
       borderPane.setPadding(new Insets(15, 15, 15, 15));
       borderPane.setStyle("-fx-background-color: #003333;");
-      
+
       Scene scene = new Scene(borderPane, 1100, 700); // add border pane to scene
       stage.setScene(scene); // set scene on the stage
       stage.setTitle("Pizza Practice"); // set title for stage
-      stage.show(); // display stage
-      
+      stage.show();
+
+
    }
    
    
