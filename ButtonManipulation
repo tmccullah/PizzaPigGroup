@@ -1,0 +1,86 @@
+import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.text.Font;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import java.util.ArrayList;
+// import JavaFX package with its subpackages and classes & ArrayList class from util package
+
+
+/******************************************************************************************************
+
+NAME: Tori McCullah
+
+DATE: 09/08/2017
+
+******************************************************************************************************/
+
+
+public class ButtonManipulation {
+
+
+   /////////// insert recipt obj ///////////////////
+   
+   
+// constructor
+   public ButtonManipulation() {
+   }
+   
+// makes a button given a string
+   public Button makeButton(String s) {
+      Button b = new Button(s);
+      return b;
+   }
+   
+// styles a set of buttons in an array list to specified style
+   public void styleManyButtons(ArrayList <Button> bList) {
+      for (Button b: bList)
+         buttonStyle(b);
+   }
+   
+// style type for regular buttons
+   public void buttonStyle(Button b) {
+      b.setStyle(
+         "-fx-font: 20px 'Arial Black'; -fx-base: #b6e7c9; -fx-min-width: 150px; -fx-min-height: "
+         + "100px; -fx-background-radius: 15em; -fx-max-width: 150px; -fx-max-height: 100px;"
+      );
+      b.wrapTextProperty().setValue(true);
+   }
+   
+ 
+// style type of "done" or "back" buttons  
+   public void buttonStyle2(Button b) {
+      b.setStyle(
+         "-fx-font: 22px 'Arial Black'; -fx-base: #66ffff; -fx-min-width: 150px; -fx-min-height: "
+         + "100px; -fx-background-radius: 15em; -fx-max-width: 150px; -fx-max-height: 100px;"
+      );
+   }
+   
+   
+// method for when a button is clicked to turn off button and turn it into a string
+// and add the string to an array specified
+   public void buttonClicked(Button b, ArrayList<String> sList) {
+      b.setOnAction( e -> {
+         turnOff(b);
+         sList.add(b.toString());
+         /////////// insert recipt obj-- modifty by adding text ///////////////////
+      });
+   }
+
+
+// method to turn on a single button
+   public void turnOff(Button b) {
+      b.setDisable(true);
+   }
+   
+   
+// method to turn off a single button
+   public void turnOn(Button b) {
+      b.setDisable(false);
+   }
+   
+   
+   /////////// insert recipt obj -- getter method to aceess object from main ///////////////////
+   
+}
