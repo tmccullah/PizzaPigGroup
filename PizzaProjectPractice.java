@@ -1,17 +1,17 @@
-package PizzaPOS;
-
-import PizzaPOS.*;
+package pizza_pos;
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
+import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 
 // import necessary packages (javafx) with its subpackages and classes
 
@@ -31,29 +31,24 @@ public class PizzaProjectPractice extends Application {
    StackPane stackPane = new StackPane();
    VBox vBox = new VBox();
    BorderPane borderPane = new BorderPane();
-   Stage stage;
-
-
-
+   
 // initialize panes
    MainPanePractice mainPane = new MainPanePractice();
    ToppingsPanePractice toppingsPane = new ToppingsPanePractice();
    CrustPanePractice crustPane = new CrustPanePractice();
    DrinksPanePractice drinkPane = new DrinksPanePractice();
    SizePanePractice sizePane = new SizePanePractice();
-   MakeAPayment makePayment = new MakeAPayment();
-
-
+   
+   RecieptPanePractice receipt = new RecieptPanePractice();
+   
 
    @Override
    public void start(Stage stage) {
-   // create new receipt text field that will not be editable
-      TextArea receipt = new TextArea("");
-      receipt.setFont(Font.font("Lucida Grande", 12));
-      receipt.setEditable(false);
+
+	   
       
       mainPane.pizza.setOnAction( e -> {
-         receipt.appendText("\nPIZZA: ");
+         receipt.enterText("\nPIZZA: ");
          mainPane.drinks.setDisable(true);
          mainPane.pizza.setDisable(true);
          mainPane.pizzaSize.setDisable(false);
@@ -69,7 +64,7 @@ public class PizzaProjectPractice extends Application {
       
 
       mainPane.crust.setOnAction( e -> {
-         receipt.appendText("\n\tsize\n\t\t" + sizePane.getSize());
+         receipt.enterText("\n\tsize\n\t\t" + sizePane.getSize());
          
          mainPane.crust.setDisable(true);
          mainPane.toppings.setDisable(false);
@@ -79,8 +74,8 @@ public class PizzaProjectPractice extends Application {
       
 
       mainPane.toppings.setOnAction( e -> {
-         receipt.appendText("\n\tcrust\n\t\t" + crustPane.getCrust());
-         receipt.appendText("\n\ttoppings");
+         receipt.enterText("\n\tcrust\n\t\t" + crustPane.getCrust());
+         receipt.enterText("\n\ttoppings");
          
          mainPane.toppings.setDisable(true);
       // change center panel to toppings
@@ -93,10 +88,10 @@ public class PizzaProjectPractice extends Application {
          toppingsPane.deactivateButtons();
          
          if (toppingsPane.getToppingsList().size() == 0)
-            receipt.appendText("\n\t\t[NONE]");
+            receipt.enterText("\n\t\t[NONE]");
          else
             for (Object top: toppingsPane.getToppingsList())
-               receipt.appendText("\n\t\t" + top);
+               receipt.enterText("\n\t\t" + top);
          
          toppingsPane.resetToppingsList();
       });
@@ -110,10 +105,10 @@ public class PizzaProjectPractice extends Application {
       // change center panel to drinks
          borderPane.setCenter(drinkPane);
          
-         receipt.appendText("\ndrinks");
+         receipt.enterText("\ndrinks");
       // for loop will find all the drinks selected and append to receipt
          for (Object drink: drinkPane.getDrinksList())
-            receipt.appendText("\n\t" + drink);  
+            receipt.enterText("\n\t" + drink);  
       });
       
       
@@ -129,21 +124,12 @@ public class PizzaProjectPractice extends Application {
          sizePane.activateButtons();
          toppingsPane.done.setDisable(false);
       });
-
-
-      mainPane.pay.setOnAction(e-> {
-         makePayment.Start(stage);
-      });
       
-   // create a label with text that is white, size 12, font is Lucida Grande
-      Label receiptLbl = new Label("Items: \n\n\n");
-      receiptLbl.setFont(Font.font("Lucida Grande", 12));
-      receiptLbl.setStyle("-fx-text-fill: white");
+      
       
    // add text area, receipt, and its label to vBox & change receipt's shape (long rectangle)
-      vBox.getChildren().addAll(receiptLbl, receipt);
-      vBox.setPrefWidth(300);
-      receipt.setPrefRowCount(500);     
+      vBox.getChildren().add(receipt);
+      vBox.setPrefWidth(300);    
 
       borderPane.setLeft(vBox);
       borderPane.setBottom(mainPane);
@@ -151,13 +137,12 @@ public class PizzaProjectPractice extends Application {
       borderPane.setAlignment(mainPane, Pos.CENTER);
       borderPane.setPadding(new Insets(15, 15, 15, 15));
       borderPane.setStyle("-fx-background-color: #003333;");
-
+      
       Scene scene = new Scene(borderPane, 1100, 700); // add border pane to scene
       stage.setScene(scene); // set scene on the stage
       stage.setTitle("Pizza Practice"); // set title for stage
-      stage.show();
-
-
+      stage.show(); // display stage
+      
    }
    
    
