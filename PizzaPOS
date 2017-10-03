@@ -1,0 +1,212 @@
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
+import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+// import necessary packages (javafx) with its subpackages and classes
+
+/******************************************************************************************************
+
+NAME: Tori McCullah
+
+DATE: 09/08/2017
+
+******************************************************************************************************/
+
+
+
+
+public class PizzaProjectPractice extends Application {
+  
+   StackPane stackPane = new StackPane();
+   VBox vBox = new VBox();
+   BorderPane borderPane = new BorderPane();
+   
+   
+// initialize panes (will contain the buttons pertaining to each)
+   MainPane mainPane = new MainPane();
+   SizePane sizePane = new SizePane();
+   CrustPane crustPane = new CrustPane();
+   ToppingsPane toppingsPane = new ToppingsPane();
+   DrinksPane drinkPane = new DrinksPane();
+   
+   
+// create logo image and add it to a stack pane (will be in background)
+   Image logoPicture = new Image("pizzaPigLogo.png", 500, 400, false, false);
+   ImageView logo = new ImageView(logoPicture);  
+   StackPane stack = new StackPane();
+   
+  
+  
+/////////////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////  
+   TextArea receipt = new TextArea("");
+   //////////// REPLACE WITH RECEIPT PANE ///////////
+/////////////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////
+
+
+   @Override
+   public void start(Stage stage) {
+   
+   // add logo to stack pane
+      stack.getChildren().add(logo);
+   
+   
+   ///////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////
+      receipt.setFont(Font.font("Lucida Grande", 12));
+      receipt.setEditable(false);
+   ///////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////
+   
+      
+      mainPane.pizza.setOnAction( 
+         e -> {
+         
+         ///////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////
+            receipt.appendText("\nPIZZA: ");
+         ///////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////
+        
+            mainPane.drinks.setDisable(true);
+            mainPane.pizza.setDisable(true);
+            mainPane.pizzaSize.setDisable(false);
+         });
+      
+      
+      mainPane.pizzaSize.setOnAction( 
+         e -> {
+            mainPane.pizzaSize.setDisable(true);
+            mainPane.crust.setDisable(false);
+         // change center panel to size
+            borderPane.setCenter(sizePane);  
+         }); 
+      
+   
+      mainPane.crust.setOnAction( 
+         e -> {
+         
+         ///////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////
+         //receipt.appendText("\n\tsize\n\t\t" + sizePane.getSize());
+         ///////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////
+         
+            mainPane.crust.setDisable(true);
+            mainPane.toppings.setDisable(false);
+         // change center panel to crust
+            borderPane.setCenter(crustPane);
+         });
+      
+   
+      mainPane.toppings.setOnAction( 
+         e -> {
+         
+         ///////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////
+         //receipt.appendText("\n\tcrust\n\t\t" + crustPane.getCrust());
+         //receipt.appendText("\n\ttoppings");
+         ///////////////////////// THIS WILL CHNAGE //////////////////////////////////////////////
+         
+            mainPane.toppings.setDisable(true);
+         // change center panel to toppings
+            borderPane.setCenter(toppingsPane);
+         });
+      
+      
+      toppingsPane.done.setOnAction( 
+         e -> {
+            toppingsPane.done.setDisable(true);
+            toppingsPane.deactivateButtons();
+         
+         // if list size is zero than no toppings were added (i.e. NONE for no toppings)
+            if (toppingsPane.getToppingsList().size() == 0)
+               receipt.appendText("\n\t\t[NONE]");
+         // otherwise, toppings were selected and must be appended to receipt to account for additions
+            else
+               for (Object top: toppingsPane.getToppingsList())
+                  receipt.appendText("\n\t\t" + top);
+         
+            toppingsPane.resetToppingsList();
+            borderPane.setCenter(stack);
+         });
+      
+   
+      mainPane.drinks.setOnAction( 
+         e -> {
+            mainPane.crust.setDisable(true);
+            mainPane.toppings.setDisable(true);
+            mainPane.pizzaSize.setDisable(true);
+         
+         // change center panel to drinks
+            borderPane.setCenter(drinkPane);
+         
+            receipt.appendText("\ndrinks");
+         });
+      
+
+      
+      
+      mainPane.back.setOnAction( 
+         e-> { 
+            borderPane.setCenter(stackPane); 
+            mainPane.activateButtons();
+            mainPane.deactivatePizzaOptions();
+            toppingsPane.activateButtons();
+            drinkPane.activateButtons();
+            crustPane.activateButtons();
+            sizePane.activateButtons();
+            toppingsPane.done.setDisable(false);
+            borderPane.setCenter(stack);
+         });
+      
+      getSelectedText();
+      
+   // create a label with text that is white, size 12, font is Lucida Grande
+      Label receiptLbl = new Label("Items: \n\n\n");
+      receiptLbl.setFont(Font.font("Lucida Grande", 12));
+      receiptLbl.setStyle("-fx-text-fill: white");
+      
+   // add text area, receipt, and its label to vBox & change receipt's shape (long rectangle)
+      vBox.getChildren().addAll(receiptLbl, receipt);
+      vBox.setPrefWidth(300);
+      receipt.setPrefRowCount(500);     
+   
+      borderPane.setLeft(vBox);
+      borderPane.setBottom(mainPane);
+      borderPane.setAlignment(vBox, Pos.CENTER);
+      borderPane.setAlignment(mainPane, Pos.CENTER);
+      borderPane.setPadding(new Insets(15, 15, 15, 15));
+      borderPane.setStyle("-fx-background-color: #003333;");
+      
+      
+      
+      borderPane.setCenter(stack);
+      
+      Scene scene = new Scene(borderPane, 1100, 700); // add stack pane to scene
+      stage.setScene(scene); // set scene on the stage
+      stage.setTitle("Pizza Practice"); // set title for stage
+      stage.show(); // display stage
+      
+   }
+   
+   
+   
+   
+   
+   public static void main(String[] args) {
+      Application.launch();
+   } // launch application of pizza practice 
+   
+   
+   ////////NOT WORKING  BC NO CONTEXT MENU
+   public void getSelectedText() {
+      receipt.setOnContextMenuRequested( e -> {
+         System.out.println("selected text:" + receipt.getSelectedText());
+      }); 
+   }
+}
