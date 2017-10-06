@@ -2,19 +2,22 @@ package PizzaPOS;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Node;
-import  javafx.scene.control.Button;
+
+import javax.swing.*;
+
 import static javafx.application.Application.launch;
 
 //**Sonya Rivers **//
@@ -23,26 +26,30 @@ import static javafx.application.Application.launch;
 
 public class PaymentPane extends  Pane {
 
-
+    //**Grid and BorderPane setup
     private GridPane grid = new GridPane();
+    private BorderPane borderPane = new BorderPane();
 
 
-    //**Methods of payment buttons
-    private Button cash = new Button();
-    private Button check = new Button();
-    private Button visa = new Button();
-    private Button mastercard = new Button ();
-    private Button americanExpress = new Button();
-    private Button discover = new Button();
-    private Button gift = new Button();
+    //**Payment method buttons
+    private Button cash = new Button("Cash");
+    private Button check = new Button("Check");
+    private Button visa = new Button("Visa");
+    private Button mastercard = new Button ("Mastercard");
+    private Button americanExpress = new Button("American Express");
+    private Button discover = new Button("Discover");
+    private Button gift = new Button("Gift Card");
+    private Button coupon = new Button("Coupon");
 
     //**Payment detail buttons
-    private Button discount = new Button();
-    private Button tip = new Button ();
-    private Button print = new Button();
-    private Button done = new Button();
+    public Button discount = new Button("Discount");
+    public Button tip = new Button ("Tip");
+    public Button print = new Button("Print");
+    public Button done = new Button("Done");
 
 
+
+    //**Creates the payment buttons for the payment pane
     public PaymentPane() {
 
         // format buttons
@@ -67,20 +74,34 @@ public class PaymentPane extends  Pane {
         gift.setId("gift");
         buttonStyle(gift);
 
-        discount.setStyle("-fx-font: 22px Silom; -fx-base: #DD55CC; -fx-pref-width: 150px; -fx-pref-height: 90px;");
-        tip.setStyle("-fx-font: 22px Silom; -fx-base: #DD55CC; -fx-pref-width: 150px; -fx-pref-height: 90px;");
-        print.setStyle("-fx-font: 22px Silom; -fx-base: #DD55CC; -fx-pref-width: 150px; -fx-pref-height: 90px;");
-        done.setStyle("-fx-font: 22px Silom; -fx-base: #DD55CC; -fx-pref-width: 150px; -fx-pref-height: 90px;");
+        coupon.setId("coupon");
+        buttonStyle(coupon);
+
+        discount.setId("discount");
+        buttonStyle(discount);
+
+        tip.setId(("tip"));
+        buttonStyle(tip);
+
+        print.setId("print");
+        buttonStyle(print);
+
+        done.setId("done");
+        buttonStyle(done);
 
 
-        // add buttons to grid
+
+
+        // add payment buttons to top left corner of grid
         grid.addRow(0, cash, check, visa, mastercard);
-        grid.addRow(1,americanExpress, discover,gift);
+        grid.addRow(1,americanExpress, discover,gift, coupon);
         grid.setPadding(new Insets(30, 30, 30, 30));
         grid.setHgap(20);
         grid.setVgap(20);
 
-        getChildren().add(grid);
+        getChildren().addAll(grid);
+
+
     }
 
     //** activate all buttons
@@ -92,6 +113,7 @@ public class PaymentPane extends  Pane {
         americanExpress.setDisable(false);
         discover.setDisable(false);
         gift.setDisable(false);
+        coupon.setDisable(false);
         discount.setDisable(false);
         tip.setDisable(false);
         print.setDisable(false);
@@ -101,15 +123,38 @@ public class PaymentPane extends  Pane {
     //**deactivate buttons (?)
 
 
-
+    //**Sets the button style for font/image/size/color
     private void buttonStyle(Button button) {
         button.setStyle(
-                "-fx-font: 22px Silom; -fx-base: #b6e7c9; -fx-pref-width: 150px; -fx-pref-height: 90px;"
+              "-fx-font: 12px Arial; -fx-base: #b6e7c9; -fx-pref-width: 150px; -fx-pref-height: 90; -fx-text-alignment: bottom_center"
+
 
         );
 
+        button.setContentDisplay(ContentDisplay.TOP);
+        //Assign an image to the button
         buttonImg(button);
+
+        //Add a dropshadow when the button is highlighted
+        DropShadow shadow = new DropShadow();
+        button.addEventHandler(MouseEvent.MOUSE_ENTERED,
+        new EventHandler<MouseEvent>(){
+            @Override public void handle(MouseEvent e){
+                button.setEffect(shadow);
+            }
+        });
+
+        //Turn off dropshadow when button isn't highlighted
+        button.addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        button.setEffect(null);
+                    }
+                });
+
     }
+
 
     private void buttonImg(Button button)
     {
@@ -138,6 +183,23 @@ public class PaymentPane extends  Pane {
 
           case "gift": filePath = "gift.png";
              break;
+
+             case "coupon": filePath = "coupon.png";
+             break;
+
+             case "discount": filePath = "discount.png";
+                 break;
+
+             case "tip": filePath = "tip.png";
+                 break;
+
+             case "print": filePath = "print.png";
+                 break;
+
+             case "done": filePath = "done.png";
+                 break;
+
+
          default:
             break;
          }
@@ -145,7 +207,9 @@ public class PaymentPane extends  Pane {
       // System.out.println( "Path: " + getClass().getResource("/").toExternalForm());
      Image img = new Image(getClass().getResourceAsStream(filePath));
         button.setGraphic(new ImageView(img));
+        button.setGraphicTextGap(1.0);
     }
+
 
 
 }
