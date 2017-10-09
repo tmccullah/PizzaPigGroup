@@ -1,5 +1,9 @@
 package com.company;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -63,6 +67,23 @@ public class Order {
         return drinks;
 
     }
+
+    public void exportOrder(){
+
+        try{
+
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con= DriverManager.getConnection(
+                    "jdbc:mysql://sql9.freemysqlhosting.net","sql9198591","rCHkr9glsa");
+            Statement stmt=con.createStatement();
+            stmt.executeUpdate("use sql9198591 ;");
+            ResultSet rs=stmt.executeQuery("select * from customer");
+            while(rs.next())
+                System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));
+            con.close();
+        }catch(Exception e){ System.out.println(e);}
+    }
+
 
 
 
