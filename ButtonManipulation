@@ -1,0 +1,158 @@
+import javafx.scene.layout.*;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Button;
+import javafx.scene.text.Font;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import java.util.ArrayList;
+// import JavaFX package with its subpackages and classes & ArrayList class from util package
+
+
+/******************************************************************************************************
+
+NAME: Tori McCullah
+
+DATE: 09/08/2017
+
+******************************************************************************************************/
+
+
+public class ButtonManipulation {
+
+// initialize text area to add button info to, the text area will be provided by the user
+   private TextArea textArea;
+   
+   
+// no-arg constructor
+   public ButtonManipulation() {
+   } 
+   
+// constructor
+   public ButtonManipulation(TextArea textArea) {
+      this.textArea = textArea;
+   }
+   
+   
+// set text area method
+   public void setTextArea(TextArea textArea) {
+      this.textArea = textArea;
+   }
+   
+   
+// makes a button given a string
+   public Button makeButton(String s) {
+      Button b = new Button(s);
+      return b;
+   }
+   
+// styles a set of buttons in an array list to specified style
+   public void styleManyButtons(ArrayList <Button> bList) {
+      for (Button b: bList)
+         buttonStyle(b);
+   }
+   
+// style type for regular buttons
+   public void buttonStyle(Button b) {
+      b.setStyle(
+         "-fx-font: 20px 'Arial Black'; -fx-base: #b6e7c9; -fx-min-width: 150px; -fx-min-height: "
+         + "100px; -fx-background-radius: 15em; -fx-max-width: 150px; -fx-max-height: 100px;"
+      );
+      b.wrapTextProperty().setValue(true);
+   }
+   
+ 
+// style type of "done" or "back" buttons  
+   public void buttonStyle2(Button b) {
+      b.setStyle(
+         "-fx-font: 22px 'Arial Black'; -fx-base: #66ffff; -fx-min-width: 150px; -fx-min-height: "
+         + "100px; -fx-background-radius: 15em; -fx-max-width: 150px; -fx-max-height: 100px;"
+      );
+   }
+   
+   
+// method for when a button is clicked to turn off button and turn it into a string and add 
+// the string to an array specified and to the text area by calling addButtonNames method
+   public void buttonClicked(Button b, ArrayList<String> sList) {
+      b.setOnAction( e -> {
+         turnOff(b);
+         addButtonNames(b, sList); 
+      });
+   }
+   
+   
+ // overloaded method to take in different types
+   public void buttonClicked(String s, Button b, ArrayList<String> sList) {
+      b.setOnAction( e -> {
+         turnOff(b);
+         addButtonNames(s, b, sList); 
+      });
+   }
+
+
+// method to turn on a single button
+   public void turnOff(Button b) {
+      b.setDisable(true);
+   }
+   
+   
+// method to turn off a single button
+   public void turnOn(Button b) {
+      b.setDisable(false);
+   }
+   
+
+
+// this method will return the the label name on the button  
+   public String buttonName(Button b) {
+   
+   // initialize starting string as full button reference in toString method
+      String s = b.toString();
+      
+   // initialize start index at 0 and ending index at the end of the string (i.e. length - 1)
+      int startIndex = 0, endIndex = s.length() - 1;
+      
+      
+   /* loop will parse through string and will stop going through it once the second 
+      single quoteis found note that the first single-quote mark is at endIndex which 
+      is why we start one indice prior to it */
+      
+      for (int i = endIndex - 2; i > 0; i--) {
+      
+      // look at character associated at index i in the string
+         char ch = s.charAt(i); 
+         
+      // must use \' in order to read a single quote character
+         if (ch == '\'') {
+         
+         // add one because label name of button starts after single quote
+            startIndex = i + 1; 
+         // break once quote is found (no reason to keep searching)
+            break; 
+         }
+      }
+      
+   // returns buttons true name (label given to it)
+      return s.substring(startIndex, endIndex); 
+   }
+   
+
+
+// method will add button names to text area and to array list
+   public void addButtonNames(Button b, ArrayList<String> sList) {
+   // create string of name
+      String bName = buttonName(b);
+   // add to text area
+      textArea.appendText("\n" + bName);
+   // add to array list
+      sList.add(bName);
+   }
+   
+// overloaded method to take in different types
+   public void addButtonNames(String s, Button b, ArrayList<String> sList) {
+      String bName = s + buttonName(b);
+      textArea.appendText("\n" + bName);
+      sList.add(bName);
+   }
+   
+}
