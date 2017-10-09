@@ -1,0 +1,187 @@
+import javafx.scene.layout.*;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Button;
+import javafx.scene.text.Font;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import java.util.ArrayList;
+// import JavaFX package with its subpackages and classes & ArrayList class from util package
+
+
+/******************************************************************************************************
+
+NAME: Tori McCullah
+
+DATE: 09/11/2017
+
+******************************************************************************************************/
+
+
+public class DrinksPane extends Pane {
+
+// must initialize some text area
+   private TextArea textArea;
+
+// grid pane will organize buttons in an ordered fashion
+   private GridPane grid = new GridPane();
+   
+   
+// array list will store all the toppings selected
+   protected ArrayList<String> drinksList = new ArrayList<>();
+   
+   
+// button  object that manipulates buttons
+   private ButtonManipulation buttonEdit = new ButtonManipulation();
+   
+   
+// create an array list of buttons
+   protected ArrayList<Button> buttonList = new ArrayList<>();
+   protected ArrayList<Button> sodaTypeList = new ArrayList<>();
+   
+   
+// create buttons for all the topping choices
+   private Button water = new Button("bottled water"); 
+   private Button coke = new Button("regular coke"); 
+   private Button diet = new Button("diet coke"); 
+   private Button sprite = new Button("sprite");  
+   private Button mrPibb = new Button("Mr. Pibb"); 
+   private Button powerade = new Button("powerade 1L bottle"); 
+   private Button twoLiter = new Button("2 Liter Soda"); 
+   private Button sodaCan = new Button("Individual Soda");
+   protected Button back = new Button("BACK");
+   
+   
+// establish contructor   
+   public DrinksPane(TextArea textArea) {
+   
+      this.textArea = textArea;
+      buttonEdit.setTextArea(textArea);
+   
+   // add buttons to list
+      buttonList.add(water);
+      buttonList.add(powerade);
+      buttonList.add(twoLiter);
+      buttonList.add(sodaCan); 
+      
+   // add buttons to soda type list
+      sodaTypeList.add(coke);
+      sodaTypeList.add(diet);
+      sodaTypeList.add(sprite);
+      sodaTypeList.add(mrPibb);
+      
+      
+   // format buttons
+      buttonEdit.styleManyButtons(buttonList);
+      buttonEdit.styleManyButtons(sodaTypeList);
+      
+      
+   // format done differently to stand out
+      buttonEdit.buttonStyle2(back);
+
+
+   // have buttons 
+      activateButtons();
+      
+      
+   // set button styles and add these four buttons to grid on first row
+      grid.addRow(0, water, powerade, twoLiter, sodaCan);  
+      grid.addRow(1, coke, diet, sprite, mrPibb);
+      grid.addRow(2, back);
+      grid.setPadding(new Insets(30, 30, 30, 30)); 
+      grid.setHgap(20);
+      grid.setVgap(20);  
+      
+      
+   // add water to drink list array
+      water.setOnAction( e -> { 
+         drinksList.add("bottledWater");
+         textArea.appendText("\nbottled water");
+      }); 
+      
+   // add powerade to drink list array
+      powerade.setOnAction( e -> { 
+         drinksList.add("powerade");
+         textArea.appendText("\npowerade");
+      });
+      
+      
+   // when two liter button is clicked, add to drink list, turn off drink choices
+   // enable soda type options to specify what type of 2-Liter soda is chosen
+      twoLiter.setOnAction( e -> { 
+         drinksList.add("2-Liter");
+         turnOffDrinkChoices();
+         turnOnSodaChoices();
+         sodaType("2-Liter: ");
+      });
+      
+   
+   // when two liter button is clicked, add to drink list, turn off drink choices
+   // enable soda type options to specify what type of soda-can is chosen
+      sodaCan.setOnAction( e -> {
+         drinksList.add("sodaCan");
+         turnOffDrinkChoices();
+         turnOnSodaChoices();
+         sodaType("soda can: ");
+      });
+      
+      
+   // basically resets buttons to default mode
+      back.setOnAction ( e -> { activateButtons(); });
+        
+        
+   // finally, add grid to pane    
+      getChildren().add(grid);
+   }
+
+
+
+ 
+// add the soda selected to list then disable button usage
+   private void sodaType(String s) {
+      for (Button b: sodaTypeList) {
+         buttonEdit.buttonClicked(s, b, drinksList);
+      }
+   }
+   
+   
+// turn buttons on but leave soda choices off (only one is 2-Liter or cans are clicked on)
+   public void activateButtons() {
+      buttonEdit.turnOn(water);
+      buttonEdit.turnOn(powerade);
+      buttonEdit.turnOn(twoLiter);
+      buttonEdit.turnOn(sodaCan);
+      turnOffSodaChoices();
+   } 
+  
+   
+// soda choices disactivated
+   public void turnOffSodaChoices() {
+      buttonEdit.turnOff(coke);
+      buttonEdit.turnOff(diet);
+      buttonEdit.turnOff(sprite);
+      buttonEdit.turnOff(mrPibb);
+      buttonEdit.turnOff(back);
+   }
+ 
+ 
+// soda choices activated for choosing   
+   public void turnOnSodaChoices() {
+      buttonEdit.turnOn(coke);
+      buttonEdit.turnOn(diet);
+      buttonEdit.turnOn(sprite);
+      buttonEdit.turnOn(mrPibb);
+      buttonEdit.turnOn(back);
+   }
+
+   
+// this method is while soda types are been selected, we turn off the other selections
+   public void turnOffDrinkChoices() {
+      buttonEdit.turnOff(water);
+      buttonEdit.turnOff(powerade);
+      buttonEdit.turnOff(twoLiter);
+      buttonEdit.turnOff(sodaCan);
+   }
+   
+         
+}
