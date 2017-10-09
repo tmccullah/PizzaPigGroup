@@ -1,0 +1,216 @@
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
+import javafx.scene.text.Font;
+import javafx.scene.paint.Color;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+// import necessary packages (javafx) with its subpackages and classes
+
+/******************************************************************************************************
+
+NAME: Tori McCullah
+
+DATE: 09/08/2017
+
+******************************************************************************************************/
+
+
+
+
+public class PizzaProject extends Application { // we can rename to something like PizzaPOS or PizzaPOS1 or something
+  
+   StackPane stackPane = new StackPane();
+   VBox vBox = new VBox();
+   HBox hBox = new HBox();
+   BorderPane borderPane = new BorderPane();
+
+// Receipt area along with remove and print button
+   TextArea receipt = new TextArea("");
+   Button deleteButton = new Button("REMOVE");
+   Button printButton = new Button("PRINT");  
+
+   
+// initialize panes (will contain the buttons pertaining to each)
+   MainPane mainPane = new MainPane(receipt);
+   SizePane sizePane = new SizePane(receipt);
+   CrustPane crustPane = new CrustPane(receipt);
+   ToppingsPane toppingsPane = new ToppingsPane(receipt);
+   DrinksPane drinkPane = new DrinksPane(receipt);
+   
+   
+// create logo image and add it to a stack pane (will be in background)
+   Image logoPicture = new Image("pizzaPigLogo.png", 500, 400, false, false);
+   ImageView logo = new ImageView(logoPicture);  
+   StackPane stack = new StackPane();
+   
+   
+   
+   @Override
+   public void start(Stage stage) {
+   
+   // add logo to stack pane
+      stack.getChildren().add(logo);
+   
+   // set print and delete button styles
+      deleteButton.setStyle(
+         "-fx-font: 12px 'Arial Black'; -fx-base: 'red'; -fx-min-width: 125px;" );
+      printButton.setStyle(
+         "-fx-font: 12px 'Arial Black'; -fx-base: #66ffff; -fx-min-width: 125px;" );
+   
+   
+      receipt.appendText("~~~~~~~~ Pizza Pig Receipt ~~~~~~~~");
+      receipt.setFont(Font.font("Lucida Grande", 12));
+      receipt.setEditable(false);
+   
+      
+   // disable drinks so user must start selecting pizza details in the specified order
+      mainPane.pizza.setOnAction( 
+         e -> {
+            receipt.appendText("\n\nPIZZA: ");
+            mainPane.drinks.setDisable(true);
+            mainPane.pizza.setDisable(true);
+            mainPane.pizzaSize.setDisable(false);
+         });
+      
+      
+   // other options disabled, must click a size
+      mainPane.pizzaSize.setOnAction( 
+         e -> {
+            receipt.appendText("\nSIZE");
+            mainPane.pizzaSize.setDisable(true);
+            mainPane.crust.setDisable(false);
+         // change center panel to size
+            borderPane.setCenter(sizePane);  
+         }); 
+      
+      
+   // other options disabled, must click a crust type
+      mainPane.crust.setOnAction( 
+         e -> {
+            receipt.appendText("\nCRUST");
+            mainPane.crust.setDisable(true);
+            mainPane.toppings.setDisable(false);
+         // change center panel to crust
+            borderPane.setCenter(crustPane);
+         });
+      
+      
+   // other options disabled, must click a topping type or done
+      mainPane.toppings.setOnAction( 
+         e -> {
+            receipt.appendText("\nTOPPINGS");
+            mainPane.toppings.setDisable(true);
+         // change center panel to toppings
+            borderPane.setCenter(toppingsPane);
+         });
+      
+      
+   // disable other options and allow toppings selection only to be made
+      toppingsPane.done.setOnAction( 
+         e -> {
+            toppingsPane.done.setDisable(true);
+            toppingsPane.deactivateButtons();
+         
+         // if list size is zero than no toppings were added (i.e. NONE for no toppings)
+            if (toppingsPane.getToppingsList().size() == 0)
+               receipt.appendText("\n[NONE]");
+         
+            toppingsPane.resetToppingsList();
+            borderPane.setCenter(stack);
+         });
+      
+      
+   // disable other options and allow drink selection only to be made
+      mainPane.drinks.setOnAction( 
+         e -> {
+            mainPane.crust.setDisable(true);
+            mainPane.toppings.setDisable(true);
+            mainPane.pizzaSize.setDisable(true);
+         // change center panel to drinks
+            borderPane.setCenter(drinkPane);
+            receipt.appendText("\n\nDRINKS");
+         });
+      
+
+      
+   // revert to original display with only pizza and drinks enabled
+      mainPane.back.setOnAction( 
+         e-> { 
+            borderPane.setCenter(stackPane); 
+            mainPane.activateButtons();
+            mainPane.deactivatePizzaOptions();
+            toppingsPane.activateButtons();
+            drinkPane.activateButtons();
+            crustPane.activateButtons();
+            sizePane.activateButtons();
+            toppingsPane.done.setDisable(false);
+            borderPane.setCenter(stack);
+         });
+         
+         
+         
+   // removes highlighted text
+      deleteButton.setOnAction( 
+         e -> { 
+            receipt.replaceSelection("[REMOVED]"); 
+         }); 
+         
+         
+   // prints finalized order
+      printButton.setOnAction( 
+         e -> { 
+            System.out.print(receipt.getText()); 
+         }); 
+      
+      
+   // add text area, receipt, and its label to vBox & change receipt's shape (long rectangle)
+      hBox.getChildren().addAll(deleteButton, printButton);
+      hBox.setAlignment(Pos.CENTER);
+      vBox.getChildren().addAll(receipt, hBox);
+      vBox.setAlignment(Pos.CENTER);
+      vBox.setPrefWidth(250);
+      receipt.setPrefRowCount(450);     
+   
+   // format border pane
+      borderPane.setLeft(vBox);
+      borderPane.setBottom(mainPane);
+      borderPane.setAlignment(vBox, Pos.CENTER);
+      borderPane.setAlignment(mainPane, Pos.CENTER);
+      borderPane.setPadding(new Insets(15, 15, 15, 15));
+      borderPane.setStyle("-fx-background-color: #003333;");
+      
+      
+      
+      borderPane.setCenter(stack);
+      
+   // add stack pane to scene
+      Scene scene = new Scene(borderPane, 1100, 700);
+   // set scene on the stage
+      stage.setScene(scene);
+   // set title for stage
+      stage.setTitle("Pizza Practice");
+   // display stage
+      stage.show();
+      
+   }
+   
+   
+   
+
+   
+// launch application of pizza practice    
+   public static void main(String[] args) {
+      Application.launch();
+   }   
+
+}
