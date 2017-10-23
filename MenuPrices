@@ -86,7 +86,7 @@ public class MenuPrices {
 // returns total price for total amount of two liter sodas
    public double totalTwoLitersPrice(int numOfTwoLiters) {
       return SODA_LITER_PRICE * numOfTwoLiters;
-      
+   }   
 
 // getter method for the price of a water bottle
    public double getWaterPrice() {
@@ -111,7 +111,7 @@ public class MenuPrices {
 
 // returns total price of order given specified number of each item
    public double getTotal(int t, int sp, int mp, int lp, int sc, int tl, int w, int p) {
-      int total = 
+      double total = 
          totalToppingPrice(t) + totalSmallPizzasPrice(sp) + totalMediumPizzasPrice(mp)
          + totalLargePizzasPrice(lp) + totalSodaCansPrice(sc) + totalTwoLitersPrice(tl)
          + totalWatersPrice(p) + totalPoweradesPrice(w);
