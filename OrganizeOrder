@@ -1,0 +1,103 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+
+/******************************************************************************************************
+
+NAME: Tori McCullah
+
+CREATED ON DATE: 10/09/2017
+
+******************************************************************************************************/
+
+public class OrganizeOrder {
+
+   private String orderString = "";
+   private ArrayList<String> order = new ArrayList<>();
+   private ArrayList<ArrayList> list = new ArrayList<>();
+   
+   
+// constructor requires string of the order to be passed through it to initialize it
+   public OrganizeOrder(String orderString) {
+      this.orderString = orderString;
+   // will create items and store them into order array
+      makeArray(); 
+   // will split items according to drink or pizza in separate lists
+      splitItemsByType(-1);
+   }
+   
+   
+// method used in constructor to create an array from the string provided via the constructor
+   private void makeArray() {
+      for (String s: orderString.split("\n"))
+         order.add(s);
+     
+      order.remove(0); // removes title
+      order.add("\n"); // add to end of list to signal when to stop
+      removeRemovedItems();
+
+   }
+   
+   
+// getter method to return the array of the order
+   public ArrayList<String> getOrder() {
+      return order;
+   }
+   
+// getter method to return list
+   public ArrayList<ArrayList> getList() {
+      return list;
+   }
+   
+
+// call method with: splitItemsByType(-1); 
+// will divvy up sections into pizzas and drinks using recursion
+   public void splitItemsByType(int index) 
+   {
+
+   // check if there are still items to put into a list
+      if (index < order.size())
+      {
+      // create an array which will go into an array of arrays
+         ArrayList<String> aList = new ArrayList<>();
+         
+         for (Object o: order) 
+         {
+            if (order.indexOf(o) >= index) 
+            {
+               String stringItem = o.toString();
+            
+               if (stringItem.length() > 1)
+                  aList.add(stringItem);
+            // when length is less than one it means there is a line break and the end of the item type
+               else 
+               {
+                  index = order.indexOf(o);
+                  break;
+               }
+            }
+         }
+      // add array of this set of items into the arraylist "list"
+         list.add(aList);
+      // use recusion to keep adding to "list"
+         splitItemsByType(index + 1);
+      }
+   }
+   ///////////////////// MAY WANT TO CHANGE FROM EMPTY STRING TO CHECK FOR A KEY WORD ///////////////////
+
+   
+   
+   public void removeRemovedItems() 
+   {
+      
+      Iterator<String> iter = order.iterator();
+      while(iter.hasNext()) {
+         if(iter.next().contains("[REMOVED]"))
+            iter.remove();
+      }
+
+   }
+   
+}
+
+
+
