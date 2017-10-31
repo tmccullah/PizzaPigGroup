@@ -1,0 +1,21 @@
+import java.util.ArrayList;
+
+public class TestOrganizeOrder {
+
+   public static void main(String[] args) {
+   
+      String s = "~~~~~~~~ Pizza Pig Receipt ~~~~~~~~\nPIZZA:\nSIZE\nmedium\nCRUST\nstuffed"
+         + "\nTOPPINGS\n[REMOVED]\ntomatoes\npineapple\ngreen bell pepper\n\nDRINKS\nsoda can: "
+         + "Mr. Pibb\nsoda can: [REMOVED]\npowerade\n2-Liter: sprite\n\nPIZZA:\nSIZE\n"
+         + "large\nCRUST\noriginal\nTOPPINGS\nextra cheese\ntomatoes\nchicken";
+      
+      
+      OrganizeOrder organizeOrder = new OrganizeOrder(s);
+      
+      int size = (organizeOrder.getList()).size();
+      
+      for (int i = 0; i < size; i++) 
+         System.out.println((organizeOrder.getList()).get(i));
+
+   }
+}
