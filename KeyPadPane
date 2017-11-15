@@ -37,7 +37,7 @@ public class KeyPadPane extends Pane {
    private Button num9 = new Button("9"); 
    private Button num0 = new Button("0");
    private Button backspace = new Button("delete");
-   private Button enter = new Button("enter");
+   private Button clear = new Button("clear");
    
    private String keyEntry = "";
    
@@ -59,7 +59,7 @@ public class KeyPadPane extends Pane {
       grid.addRow(0, num1, num2, num3);
       grid.addRow(1, num4, num5, num6);
       grid.addRow(2, num7, num8, num9);
-      grid.addRow(3, backspace, num0, enter);
+      grid.addRow(3, backspace, num0, clear);
       
       
    // add all buttons to button list
@@ -73,19 +73,17 @@ public class KeyPadPane extends Pane {
       buttonList.add(num7);
       buttonList.add(num8);
       buttonList.add(num9);
-      buttonList.add(enter);
+      buttonList.add(clear);
       buttonList.add(backspace); 
 
    // format all buttons in list
       styleManyButtons(buttonList);
       
       
-   // action when button is clicked, temporarily will print onto console
+   // action when button is clicked
       for (Button b: buttonList) {
          b.setOnAction( e -> {
             String s = getKeyEntry(b);
-            System.out.println(s);
-  //************************************* !!!!!!!!!! remember to remove print statement !!!!!!!!!!!!!!!!
             tf.setText(s);
          });
       }
@@ -113,12 +111,18 @@ public class KeyPadPane extends Pane {
    // assign a string to button's label, which will represent a keyboard character
       String s = b.getText();
  
-      if (s.equals("delete")) {
-         if (keyEntry.length() > 0)
+      if (s.equals("delete") || s.equals("clear")) {
+         if (keyEntry.length() > 0) {
+         
          // delete acts as the backspace
-            keyEntry = keyEntry.substring(0, keyEntry.length()-1);
+            if (s.equals("delete"))
+               keyEntry = keyEntry.substring(0, keyEntry.length()-1);
+         
+         // otherwise clear entire entry
+            else
+               keyEntry = "";
+         }
       }
-      
    // otherwise append the character to the keyEntry string
       else
          keyEntry += s;
@@ -130,7 +134,9 @@ public class KeyPadPane extends Pane {
 
    
    public void buttonStyle(Button b) {
-      b.setStyle("-fx-font: 18px 'Verdana'; -fx-base: #b6e7c9; -fx-min-width: 20px; -fx-max-width: 130px");
+      b.setStyle(
+         "-fx-font: 18px 'Verdana'; -fx-base: #b6e7c9; -fx-min-width: 100px; -fx-max-width: 100px"
+      );
    }
  
    
@@ -145,5 +151,25 @@ public class KeyPadPane extends Pane {
    public String getTF() {
       return tf.getText();
    }
-
+   
+   public void clearTF() {
+      keyEntry = "";
+      tf.setText(keyEntry);
+   }
+   
+   public void changeKeyPad() {
+   // create a new button in replace of backspace
+      Button decimal = new Button(".");
+   // style Button to match the rest
+      buttonStyle(decimal);
+   // overlay button on pane where previous one was
+      grid.add(decimal, 0, 3, 1, 1);
+      
+   // action for when decimal button is clicked
+      decimal.setOnAction(e -> {
+         keyEntry += ".";
+         tf.setText(keyEntry);
+      });
+   }
+   
 }
