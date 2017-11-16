@@ -23,29 +23,39 @@ DATE: 10/31/2017
 
 public class CashPane extends Pane {
 
-   private TextField amountTF = new TextField();
+// initialize data fields
+   private TextField amountTF = new TextField("0.00");
    private Label amount = new Label("Amount: ");
    private KeyPadPane keyPad = new KeyPadPane(amountTF);
-   
-   private HBox hBox= new HBox();
-   private VBox vBox1 = new VBox();
-   private VBox vBox2 = new VBox();
-   private VBox vBox3 = new VBox();
-   private HBox hBox1 = new HBox();
-   
    private ButtonManipulation buttonEdit = new ButtonManipulation();
-   
+// initialize buttons
    private Button oneDollar = new Button("$1");
    private Button fiveDollar = new Button("$5");
    private Button tenDollar = new Button("$10");
    private Button twentyDollar = new Button("$20");
    private Button fiftyDollar = new Button("$50");
    private Button oneHunDollar = new Button("$100");
-   private Button remaining = new Button("remaining");
-   private Button closestDollar = new Button("closest dollar");
+   protected Button pay = new Button("Pay");
    
+// initialize panes to place buttons onto
+   private HBox hBox= new HBox();
+   private VBox vBox1 = new VBox();
+   private VBox vBox2 = new VBox();
+   private VBox vBox3 = new VBox();
+   private HBox hBox1 = new HBox();
+   private VBox vBox = new VBox();
+
    
-   public CashPane() {
+   public CashPane(double total) {
+   
+   // based on the total from the reciept, two buttons will be made
+      String r = total + "";
+      String cD = Math.ceil(total) + "0";
+      Button remaining = new Button(r); // remaining button will have the total cost
+      Button closestDollar = new Button(cD); // closestDollar rounds up to the next dollar
+ 
+   // edit keyPad to proper look
+      keyPad.changeKeyPad();
    
    // style all the buttons to the same light green square style
       buttonStyle(oneDollar);
@@ -56,6 +66,8 @@ public class CashPane extends Pane {
       buttonStyle(oneHunDollar);
       buttonStyle(remaining);
       buttonStyle(closestDollar);
+   // pay button is styled differently to stand out
+      buttonStyle2(pay);
       
    // call method to figure out how to fill in text field when specified button is pressed
       fillTF(oneDollar, 1);
@@ -64,8 +76,8 @@ public class CashPane extends Pane {
       fillTF(twentyDollar, 20);
       fillTF(fiftyDollar, 50);
       fillTF(oneHunDollar, 100);
-      fillTF(remaining, 22); // change later
-      fillTF(closestDollar, 18); // change later     
+      fillTF(remaining, (float)total); // change later
+      fillTF(closestDollar, (float)Math.ceil(total)); // change later     
       
    // style the label, make sure cannot edit, only edit through keypad
       styleLabel(amount);
@@ -101,9 +113,9 @@ public class CashPane extends Pane {
       vBox1.setPrefHeight(300);
       // add all three vboxes in a row
       
-      
-      
-      getChildren().addAll(hBox);
+      vBox.getChildren().addAll(hBox, pay);
+      vBox.setAlignment(Pos.CENTER);
+      getChildren().addAll(vBox);
       
    }
       
@@ -116,28 +128,37 @@ public class CashPane extends Pane {
       l.setStyle("-fx-font: 18px 'Arial Black'; -fx-base: #000000;");
    }
   
-   
-/******************************** APPEND TEXT CORRECTLY **************************************/   
+     
 // method to fill in the text field
    public void fillTF(Button b, float num) {
       String s = num + "";
       b.setOnAction(e -> {
-         amountTF.appendText(s);
+         keyPad.clearTF();
+         amountTF.setText(s);
       });
    }
    
-// methdo to style button according to below
+// method to style button according to below
    public void buttonStyle(Button b) {
       b.setStyle(
          "-fx-font: 18px 'Arial Black'; -fx-base: #b6e7c9; -fx-min-width: 80px; -fx-max-width: 80px"
       );
    }
+
+// method to style button according to below
+   public void buttonStyle2(Button b) {
+      b.setStyle(
+         "-fx-font: 18px 'Arial Black'; -fx-base: 'yellow'; -fx-min-width: 80px; -fx-max-width: 80px"
+      );
+   }
+   
+   
+// method that will find amount paid
+   public float getBalance() {
+      String s = amountTF.getText();
+      double d = Double.parseDouble(s);
+      float f = (float)(d);
+      return f;
+   }
+   
 }
-
-
-
-
-//////////////////////////////////////////
-///// STILL NEED METHODS TO RETRIEVE /////
-// CLOSEST DOLLAR AND REMAINING AMOUNT //
-/////////////////////////////////////////
